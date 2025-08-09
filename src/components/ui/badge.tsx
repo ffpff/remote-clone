@@ -4,7 +4,7 @@ import { cva, type VariantProps } from "class-variance-authority"
 import { cn } from "@/lib/utils"
 
 const badgeVariants = cva(
-  "inline-flex items-center rounded-md border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2",
+  "inline-flex items-center rounded-md border px-2.5 py-0.5 text-xs font-semibold transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2",
   {
     variants: {
       variant: {
@@ -14,7 +14,18 @@ const badgeVariants = cva(
           "border-transparent bg-secondary text-secondary-foreground hover:bg-secondary/80",
         destructive:
           "border-transparent bg-destructive text-destructive-foreground shadow hover:bg-destructive/80",
-        outline: "text-foreground",
+        outline: "text-foreground hover:bg-accent hover:text-accent-foreground",
+        // RemoteOK brand variants
+        "brand-red":
+          "border-transparent bg-remoteok-red text-remoteok-red-foreground shadow hover:bg-remoteok-red/80",
+        "brand-teal":
+          "border-transparent bg-remoteok-teal text-remoteok-teal-foreground shadow hover:bg-remoteok-teal/80",
+        "brand-outline":
+          "border-remoteok-red text-remoteok-red bg-transparent hover:bg-remoteok-red hover:text-remoteok-red-foreground",
+        success:
+          "border-transparent bg-green-500 text-white shadow hover:bg-green-500/80",
+        warning:
+          "border-transparent bg-yellow-500 text-white shadow hover:bg-yellow-500/80",
       },
     },
     defaultVariants: {
