@@ -1,10 +1,24 @@
+'use client';
+
+import { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
+import { JobCard } from "@/components/JobCard";
+import { JobSearch } from "@/components/JobSearch";
+import { getJobs, getFeaturedJobs } from "@/data/jobs";
 import { Search, MapPin, DollarSign, Heart, Star, Calendar } from "lucide-react";
+import { SearchResult } from "@/types/job";
 
 export default function Home() {
+  const allJobs = getJobs();
+  const featuredJobs = getFeaturedJobs();
+  const [searchResults, setSearchResults] = useState<SearchResult | null>(null);
+  
+  // 使用搜索结果或默认显示所有工作
+  const displayJobs = searchResults?.jobs || allJobs;
+  
   return (
     <div className="min-h-screen bg-white">
       {/* Navigation */}
@@ -40,12 +54,8 @@ export default function Home() {
             find a <span className="font-black">remote job</span><br />
             work from <span className="font-black">anywhere</span>
           </h2>
-          <div className="flex items-center bg-white rounded-full px-4 py-3 w-full max-w-md lg:max-w-lg shadow-lg animate-slide-up">
-            <Search className="text-muted-foreground mr-3" size={20} />
-            <Input
-              placeholder="senior"
-              className="border-0 text-base lg:text-lg text-foreground placeholder:text-muted-foreground focus-visible:ring-0 bg-transparent"
-            />
+          <div className="w-full max-w-2xl">
+            <JobSearch onSearchResults={setSearchResults} />
           </div>
         </div>
       </div>
@@ -158,115 +168,26 @@ export default function Home() {
 
         {/* Job Cards */}
         <div className="space-y-4">
-          {/* Featured Job */}
-          <div className="bg-remoteok-red rounded-lg p-6 text-remoteok-red-foreground job-card cursor-pointer shadow-md hover:shadow-lg transition-all duration-200">
-            <div className="flex flex-col md:flex-row items-start justify-between gap-4">
-              <div className="flex items-start gap-4 flex-1">
-                <div className="w-12 h-12 bg-white rounded-lg flex items-center justify-center flex-shrink-0">
-                  <span className="text-remoteok-red text-2xl">📱</span>
-                </div>
-                <div className="min-w-0 flex-1">
-                  <div className="flex flex-wrap items-center gap-2 mb-2">
-                    <h3 className="text-xl font-bold">Product Engineer</h3>
-                    <Badge className="bg-green-500 text-white text-xs">VERIFIED</Badge>
-                  </div>
-                  <p className="text-white/90 mb-2">Tolt</p>
-                  <div className="flex flex-wrap items-center gap-4 mb-3 text-sm text-white/80">
-                    <span>🌍 Worldwide</span>
-                    <span>💰 $40k - $80k</span>
-                  </div>
-                  <div className="flex flex-wrap gap-2">
-                    <Badge variant="outline" className="bg-white text-remoteok-red border-white text-xs">JavaScript</Badge>
-                    <Badge variant="outline" className="bg-white text-remoteok-red border-white text-xs">Typescript</Badge>
-                    <Badge variant="outline" className="bg-white text-remoteok-red border-white text-xs">React</Badge>
-                  </div>
-                </div>
-              </div>
-              <div className="text-right flex-shrink-0">
-                <span className="text-white/70 text-sm">2d</span>
-              </div>
+          {displayJobs.length > 0 ? (
+            displayJobs.map((job) => (
+              <JobCard key={job.id} job={job} />
+            ))
+          ) : (
+            <div className="text-center py-12">
+              <div className="text-6xl mb-4">🔍</div>
+              <h3 className="text-xl font-semibold text-gray-700 mb-2">未找到匹配的职位</h3>
+              <p className="text-gray-500 mb-4">尝试调整您的搜索条件或过滤器</p>
+              <Button 
+                variant="outline"
+                onClick={() => {
+                  setSearchResults(null);
+                  // 这里可以添加重置搜索的逻辑
+                }}
+              >
+                显示所有职位
+              </Button>
             </div>
-          </div>
-
-          {/* Regular Job */}
-          <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-6 job-card cursor-pointer hover:shadow-md transition-all duration-200">
-            <div className="flex flex-col md:flex-row items-start justify-between gap-4">
-              <div className="flex items-start gap-4 flex-1">
-                <div className="w-12 h-12 bg-yellow-200 rounded-lg flex items-center justify-center flex-shrink-0">
-                  <span className="text-yellow-700 text-sm font-bold">ON</span>
-                </div>
-                <div className="min-w-0 flex-1">
-                  <h3 className="text-lg md:text-xl font-bold text-foreground mb-2">$30 Hourly Virtual Assistant USA Residents Only</h3>
-                  <p className="text-muted-foreground mb-2">HOLDON NOW</p>
-                  <div className="flex flex-wrap items-center gap-4 mb-3 text-sm text-muted-foreground">
-                    <span>🇺🇸 United States</span>
-                    <span>💰 $80k - $90k</span>
-                  </div>
-                  <div className="flex flex-wrap gap-2">
-                    <Badge variant="outline" className="text-xs">Admin</Badge>
-                    <Badge variant="outline" className="text-xs">Customer Support</Badge>
-                    <Badge variant="outline" className="text-xs">Data Entry</Badge>
-                  </div>
-                </div>
-              </div>
-              <div className="text-right flex-shrink-0">
-                <span className="text-muted-foreground text-sm">28d</span>
-              </div>
-            </div>
-          </div>
-
-          {/* More jobs */}
-          <div className="bg-card border border-border rounded-lg p-6 job-card cursor-pointer hover:shadow-md transition-all duration-200">
-            <div className="flex flex-col md:flex-row items-start justify-between gap-4">
-              <div className="flex items-start gap-4 flex-1">
-                <div className="w-12 h-12 bg-muted rounded-lg flex items-center justify-center flex-shrink-0">
-                  <span className="text-muted-foreground text-sm font-bold">AB</span>
-                </div>
-                <div className="min-w-0 flex-1">
-                  <h3 className="text-lg md:text-xl font-bold text-card-foreground mb-2">Developer Relations Engineer</h3>
-                  <p className="text-muted-foreground mb-2">Arbitrum Foundation</p>
-                  <div className="flex flex-wrap items-center gap-4 mb-3 text-sm text-muted-foreground">
-                    <span>🌍 Europe</span>
-                    <span>💰 $60k - $130k+</span>
-                  </div>
-                  <div className="flex flex-wrap gap-2">
-                    <Badge variant="outline" className="text-xs">Developer</Badge>
-                    <Badge variant="outline" className="text-xs">Web3</Badge>
-                    <Badge variant="outline" className="text-xs">Cryptocurrency</Badge>
-                  </div>
-                </div>
-              </div>
-              <div className="text-right flex-shrink-0">
-                <span className="text-muted-foreground text-sm">19h</span>
-              </div>
-            </div>
-          </div>
-
-          <div className="bg-card border border-border rounded-lg p-6 job-card cursor-pointer hover:shadow-md transition-all duration-200">
-            <div className="flex flex-col md:flex-row items-start justify-between gap-4">
-              <div className="flex items-start gap-4 flex-1">
-                <div className="w-12 h-12 bg-blue-50 rounded-lg flex items-center justify-center flex-shrink-0">
-                  <span className="text-blue-500 text-lg">🏥</span>
-                </div>
-                <div className="min-w-0 flex-1">
-                  <h3 className="text-lg md:text-xl font-bold text-card-foreground mb-2">Customer Experience Associate</h3>
-                  <p className="text-muted-foreground mb-2">Koala Health</p>
-                  <div className="flex flex-wrap items-center gap-4 mb-3 text-sm text-muted-foreground">
-                    <span>🌍 Worldwide</span>
-                    <span>💰 $60k - $120k</span>
-                  </div>
-                  <div className="flex flex-wrap gap-2">
-                    <Badge variant="outline" className="text-xs">Technical</Badge>
-                    <Badge variant="outline" className="text-xs">Support</Badge>
-                    <Badge variant="outline" className="text-xs">Web</Badge>
-                  </div>
-                </div>
-              </div>
-              <div className="text-right flex-shrink-0">
-                <span className="text-muted-foreground text-sm">20h</span>
-              </div>
-            </div>
-          </div>
+          )}
         </div>
       </div>
     </div>
