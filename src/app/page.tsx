@@ -9,9 +9,10 @@ import { Separator } from "@/components/ui/separator";
 import { JobCard } from "@/components/JobCard";
 import { JobSearch } from "@/components/JobSearch";
 import { FilterDropdown } from "@/components/FilterDropdown";
+import { RegisterModal } from "@/components/RegisterModal";
 import { getJobs, getFeaturedJobs, getJobFilterOptions } from "@/data/jobs";
 import { Search, MapPin, DollarSign, Heart, Star, Calendar } from "lucide-react";
-import { SearchResult, SearchFilters } from "@/types/job";
+import { Job, SearchResult, SearchFilters } from "@/types/job";
 import { useJobSearch } from "@/hooks/useJobSearch";
 
 export default function Home() {
@@ -19,6 +20,8 @@ export default function Home() {
   const featuredJobs = getFeaturedJobs();
   const filterOptions = getJobFilterOptions();
   const [searchResults, setSearchResults] = useState<SearchResult | null>(null);
+  const [isRegisterModalOpen, setIsRegisterModalOpen] = useState(false);
+  const [selectedJob, setSelectedJob] = useState<Job | undefined>(undefined);
   
   // 使用JobSearch Hook管理整体过滤状态
   const {
@@ -32,6 +35,12 @@ export default function Home() {
   
   // 使用hook的搜索结果
   const displayJobs = searchResult.jobs;
+  
+  // 处理职位卡片点击事件
+  const handleJobCardClick = (job: Job) => {
+    setSelectedJob(job);
+    setIsRegisterModalOpen(true);
+  };
   
   return (
     <div className="min-h-screen bg-white">
@@ -218,23 +227,34 @@ export default function Home() {
         <div className="space-y-4">
           {displayJobs.length > 0 ? (
             displayJobs.map((job) => (
-              <JobCard key={job.id} job={job} />
+              <JobCard 
+                key={job.id} 
+                job={job} 
+                onClick={() => handleJobCardClick(job)}
+              />
             ))
           ) : (
             <div className="text-center py-12">
               <div className="text-6xl mb-4">🔍</div>
-              <h3 className="text-xl font-semibold text-gray-700 mb-2">未找到匹配的职位</h3>
-              <p className="text-gray-500 mb-4">尝试调整您的搜索条件或过滤器</p>
+              <h3 className="text-xl font-semibold text-gray-700 mb-2">No matching jobs found</h3>
+              <p className="text-gray-500 mb-4">Try adjusting your search criteria or filters</p>
               <Button 
                 variant="outline"
                 onClick={clearFilters}
               >
-                显示所有职位
+                Show all jobs
               </Button>
             </div>
           )}
         </div>
       </div>
+      
+      {/* 注册弹窗 */}
+      <RegisterModal 
+        isOpen={isRegisterModalOpen}
+        onClose={() => setIsRegisterModalOpen(false)}
+        selectedJob={selectedJob}
+      />
     </div>
   );
 }

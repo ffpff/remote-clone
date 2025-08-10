@@ -83,7 +83,7 @@ export function JobSearch({ onSearchResults, initialFilters }: JobSearchProps) {
         <div className="flex items-center bg-white rounded-full px-4 py-3 shadow-lg border border-gray-200">
           <Search className="text-muted-foreground mr-3" size={20} />
           <Input
-            placeholder="搜索职位、公司、技能..."
+            placeholder="Search jobs, companies, skills..."
             value={searchInput}
             onChange={(e) => {
               setSearchInput(e.target.value);
@@ -141,7 +141,7 @@ export function JobSearch({ onSearchResults, initialFilters }: JobSearchProps) {
           <div>
             <label className="text-sm font-medium text-gray-700 mb-2 flex items-center">
               <MapPin size={16} className="mr-1" />
-              地点
+              Location
             </label>
             <div className="flex flex-wrap gap-2">
               {filterOptions.locations.slice(0, 8).map(location => (
@@ -161,7 +161,7 @@ export function JobSearch({ onSearchResults, initialFilters }: JobSearchProps) {
           <div>
             <label className="text-sm font-medium text-gray-700 mb-2 flex items-center">
               <Briefcase size={16} className="mr-1" />
-              分类
+              Category
             </label>
             <div className="flex flex-wrap gap-2">
               {filterOptions.categories.slice(0, 10).map(category => (
@@ -179,7 +179,7 @@ export function JobSearch({ onSearchResults, initialFilters }: JobSearchProps) {
 
           {/* 热门技能 */}
           <div>
-            <label className="text-sm font-medium text-gray-700 mb-2">热门技能</label>
+            <label className="text-sm font-medium text-gray-700 mb-2">Popular Skills</label>
             <div className="flex flex-wrap gap-2">
               {filterOptions.skills.slice(0, 12).map(skill => (
                 <Badge
@@ -203,7 +203,7 @@ export function JobSearch({ onSearchResults, initialFilters }: JobSearchProps) {
                 onChange={(e) => updateFilters({ isVerified: e.target.checked ? true : undefined })}
                 className="rounded"
               />
-              <span className="text-sm">仅认证公司</span>
+              <span className="text-sm">Verified companies only</span>
             </label>
             <label className="flex items-center space-x-2 cursor-pointer">
               <input
@@ -212,7 +212,7 @@ export function JobSearch({ onSearchResults, initialFilters }: JobSearchProps) {
                 onChange={(e) => updateFilters({ isFeatured: e.target.checked ? true : undefined })}
                 className="rounded"
               />
-              <span className="text-sm">特色职位</span>
+              <span className="text-sm">Featured jobs</span>
             </label>
           </div>
         </div>
@@ -221,10 +221,10 @@ export function JobSearch({ onSearchResults, initialFilters }: JobSearchProps) {
       {/* 活跃过滤器显示 */}
       {hasActiveFilters && (
         <div className="flex items-center gap-2 flex-wrap">
-          <span className="text-sm text-gray-600">活跃过滤器:</span>
+          <span className="text-sm text-gray-600">Active filters:</span>
           {filters.query && (
             <Badge variant="secondary" className="gap-1">
-              搜索: {filters.query}
+              Search: {filters.query}
               <button
                 onClick={(e) => {
                   e.stopPropagation();
@@ -239,7 +239,7 @@ export function JobSearch({ onSearchResults, initialFilters }: JobSearchProps) {
           )}
           {filters.location && (
             <Badge variant="secondary" className="gap-1">
-              地点: {filters.location}
+              Location: {filters.location}
               <button
                 onClick={(e) => {
                   e.stopPropagation();
@@ -254,7 +254,7 @@ export function JobSearch({ onSearchResults, initialFilters }: JobSearchProps) {
           )}
           {filters.category && (
             <Badge variant="secondary" className="gap-1">
-              分类: {filters.category}
+              Category: {filters.category}
               <button
                 onClick={(e) => {
                   e.stopPropagation();
@@ -269,7 +269,7 @@ export function JobSearch({ onSearchResults, initialFilters }: JobSearchProps) {
           )}
           {(filters.skills || []).map(skill => (
             <Badge key={skill} variant="secondary" className="gap-1">
-              技能: {skill}
+              Skill: {skill}
               <button
                 onClick={(e) => {
                   e.stopPropagation();
@@ -283,7 +283,7 @@ export function JobSearch({ onSearchResults, initialFilters }: JobSearchProps) {
             </Badge>
           ))}
           <Button variant="outline" size="sm" onClick={clearFilters}>
-            清空所有过滤器
+            Clear all filters
           </Button>
         </div>
       )}
@@ -291,12 +291,12 @@ export function JobSearch({ onSearchResults, initialFilters }: JobSearchProps) {
       {/* 搜索结果统计 */}
       <div className="text-sm text-gray-600">
         {isEmpty ? (
-          <span>未找到匹配的职位</span>
+          <span>No matching jobs found</span>
         ) : (
           <span>
-            找到 <span className="font-medium">{searchResult.filteredCount}</span> 个职位
+            Found <span className="font-medium">{searchResult.filteredCount}</span> jobs
             {searchResult.filteredCount !== searchResult.totalCount && (
-              <span> (共 {searchResult.totalCount} 个)</span>
+              <span> (of {searchResult.totalCount} total)</span>
             )}
           </span>
         )}

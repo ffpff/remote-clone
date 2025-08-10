@@ -5,9 +5,10 @@ import { cn } from "@/lib/utils";
 interface JobCardProps {
   job: Job;
   className?: string;
+  onClick?: () => void;
 }
 
-export function JobCard({ job, className }: JobCardProps) {
+export function JobCard({ job, className, onClick }: JobCardProps) {
   const cardBgClass = job.isFeatured 
     ? "bg-remoteok-red text-white" 
     : job.backgroundColor || "bg-white border";
@@ -17,11 +18,14 @@ export function JobCard({ job, className }: JobCardProps) {
   const timeColorClass = job.isFeatured ? "text-red-100" : "text-gray-500";
 
   return (
-    <div className={cn(
-      "rounded-lg p-6 job-card cursor-pointer transition-all duration-200 hover:shadow-lg hover:-translate-y-1",
-      cardBgClass,
-      className
-    )}>
+    <div 
+      className={cn(
+        "rounded-lg p-6 job-card cursor-pointer transition-all duration-200 hover:shadow-lg hover:-translate-y-1",
+        cardBgClass,
+        className
+      )}
+      onClick={onClick}
+    >
       <div className="flex items-start justify-between">
         <div className="flex items-start space-x-4">
           <div className={cn(
