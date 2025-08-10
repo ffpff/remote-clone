@@ -117,7 +117,7 @@ export function JobSearch({ onSearchResults, initialFilters }: JobSearchProps) {
 
         {/* 搜索建议 */}
         {showSuggestions && suggestions.length > 0 && (
-          <div className="absolute top-full left-0 right-0 mt-2 bg-white rounded-lg shadow-lg border border-gray-200 z-50 max-h-60 overflow-y-auto">
+          <div className="absolute top-full left-0 right-0 mt-2 bg-white rounded-lg shadow-lg border border-gray-200 z-[9999] max-h-60 overflow-y-auto">
             {suggestions.map((suggestion, index) => (
               <button
                 key={index}
@@ -225,41 +225,61 @@ export function JobSearch({ onSearchResults, initialFilters }: JobSearchProps) {
           {filters.query && (
             <Badge variant="secondary" className="gap-1">
               搜索: {filters.query}
-              <X
-                size={14}
-                className="cursor-pointer"
-                onClick={() => updateFilters({ query: '' })}
-              />
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  updateFilters({ query: '' });
+                }}
+                className="cursor-pointer hover:bg-gray-200 rounded-full p-0.5"
+                type="button"
+              >
+                <X size={14} />
+              </button>
             </Badge>
           )}
           {filters.location && (
             <Badge variant="secondary" className="gap-1">
               地点: {filters.location}
-              <X
-                size={14}
-                className="cursor-pointer"
-                onClick={() => updateFilters({ location: '' })}
-              />
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  updateFilters({ location: '' });
+                }}
+                className="cursor-pointer hover:bg-gray-200 rounded-full p-0.5"
+                type="button"
+              >
+                <X size={14} />
+              </button>
             </Badge>
           )}
           {filters.category && (
             <Badge variant="secondary" className="gap-1">
               分类: {filters.category}
-              <X
-                size={14}
-                className="cursor-pointer"
-                onClick={() => updateFilters({ category: '' })}
-              />
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  updateFilters({ category: '' });
+                }}
+                className="cursor-pointer hover:bg-gray-200 rounded-full p-0.5"
+                type="button"
+              >
+                <X size={14} />
+              </button>
             </Badge>
           )}
           {(filters.skills || []).map(skill => (
             <Badge key={skill} variant="secondary" className="gap-1">
               技能: {skill}
-              <X
-                size={14}
-                className="cursor-pointer"
-                onClick={() => handleSkillFilter(skill)}
-              />
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleSkillFilter(skill);
+                }}
+                className="cursor-pointer hover:bg-gray-200 rounded-full p-0.5"
+                type="button"
+              >
+                <X size={14} />
+              </button>
             </Badge>
           ))}
           <Button variant="outline" size="sm" onClick={clearFilters}>

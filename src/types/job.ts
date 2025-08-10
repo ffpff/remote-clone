@@ -13,6 +13,7 @@ export interface Job {
   type: 'remote' | 'hybrid' | 'onsite';
   category: string;
   backgroundColor?: string;
+  benefits?: string[];
 }
 
 export interface JobsData {
@@ -31,6 +32,7 @@ export interface SearchFilters {
   type?: 'remote' | 'hybrid' | 'onsite';
   isVerified?: boolean;
   isFeatured?: boolean;
+  benefits?: string[];
 }
 
 export interface SearchResult {
@@ -44,4 +46,6 @@ export interface FilterOptions {
   categories: string[];
   skills: string[];
   types: ('remote' | 'hybrid' | 'onsite')[];
+  benefits: string[];
+  salaryRanges: { label: string; min: number; max: number }[];
 }

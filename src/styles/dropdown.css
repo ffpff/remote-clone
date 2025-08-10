@@ -1,0 +1,31 @@
+/* 确保下拉框正确显示的样式 */
+.dropdown-container {
+  position: relative;
+  z-index: 1000;
+}
+
+.dropdown-menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  margin-top: 0.5rem;
+  background: white;
+  border-radius: 0.5rem;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  border: 1px solid #e5e7eb;
+  z-index: 9999;
+  min-width: 16rem;
+  max-height: 20rem;
+  overflow-y: auto;
+}
+
+/* 确保父容器不会裁剪下拉框 */
+.filter-section {
+  overflow: visible !important;
+}
+
+.filter-row {
+  position: relative;
+  z-index: 10;
+  overflow: visible;
+}

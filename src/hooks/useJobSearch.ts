@@ -26,9 +26,12 @@ const defaultFilters: SearchFilters = {
   location: '',
   category: '',
   skills: [],
+  minSalary: undefined,
+  maxSalary: undefined,
   type: undefined,
   isVerified: undefined,
   isFeatured: undefined,
+  benefits: [],
 };
 
 export function useJobSearch(initialFilters: SearchFilters = {}): UseJobSearchReturn {
@@ -77,8 +80,9 @@ export function useJobSearch(initialFilters: SearchFilters = {}): UseJobSearchRe
       filters.type ||
       filters.isVerified ||
       filters.isFeatured ||
-      filters.minSalary ||
-      filters.maxSalary
+      filters.minSalary !== undefined ||
+      filters.maxSalary !== undefined ||
+      (filters.benefits && filters.benefits.length > 0)
     );
   }, [filters]);
 

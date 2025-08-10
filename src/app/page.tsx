@@ -1,23 +1,37 @@
 'use client';
 
 import { useState } from 'react';
+import '../styles/dropdown.css';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { JobCard } from "@/components/JobCard";
 import { JobSearch } from "@/components/JobSearch";
-import { getJobs, getFeaturedJobs } from "@/data/jobs";
+import { FilterDropdown } from "@/components/FilterDropdown";
+import { getJobs, getFeaturedJobs, getJobFilterOptions } from "@/data/jobs";
 import { Search, MapPin, DollarSign, Heart, Star, Calendar } from "lucide-react";
-import { SearchResult } from "@/types/job";
+import { SearchResult, SearchFilters } from "@/types/job";
+import { useJobSearch } from "@/hooks/useJobSearch";
 
 export default function Home() {
   const allJobs = getJobs();
   const featuredJobs = getFeaturedJobs();
+  const filterOptions = getJobFilterOptions();
   const [searchResults, setSearchResults] = useState<SearchResult | null>(null);
   
-  // 使用搜索结果或默认显示所有工作
-  const displayJobs = searchResults?.jobs || allJobs;
+  // 使用JobSearch Hook管理整体过滤状态
+  const {
+    searchResult,
+    filters,
+    updateFilters,
+    clearFilters,
+    hasActiveFilters,
+    isEmpty
+  } = useJobSearch();
+  
+  // 使用hook的搜索结果
+  const displayJobs = searchResult.jobs;
   
   return (
     <div className="min-h-screen bg-white">
@@ -55,7 +69,10 @@ export default function Home() {
             work from <span className="font-black">anywhere</span>
           </h2>
           <div className="w-full max-w-2xl">
-            <JobSearch onSearchResults={setSearchResults} />
+            <JobSearch 
+              onSearchResults={setSearchResults}
+              initialFilters={filters}
+            />
           </div>
         </div>
       </div>
@@ -108,26 +125,57 @@ export default function Home() {
       </div>
 
       {/* Filters */}
-      <div className="bg-muted/50 border-b border-border">
+      <div className="bg-muted/50 border-b border-border filter-section">
         <div className="container py-4">
-          <div className="flex items-center gap-3 md:gap-6 overflow-x-auto pb-2">
+          <div className="flex items-center gap-3 md:gap-6 overflow-x-auto pb-2 filter-row">
             <div className="flex items-center gap-2 flex-shrink-0">
               <div className="w-8 h-8 bg-foreground rounded-full flex items-center justify-center">
                 <span className="text-background text-sm">🔧</span>
               </div>
-              <Button variant="ghost" className="text-foreground text-sm md:text-base whitespace-nowrap">
-                Search ▼
-              </Button>
+              <FilterDropdown
+                title="🔍 Search"
+                options={filterOptions.categories.map(cat => ({ 
+                  value: cat, 
+                  label: cat,
+                  count: allJobs.filter(job => job.category === cat).length
+                }))}
+                selectedValues={filters.category ? [filters.category] : []}
+                onSelectionChange={(values) => updateFilters({ category: values[0] || undefined })}
+                multiSelect={false}
+              />
             </div>
-            <Button variant="ghost" className="text-foreground text-sm md:text-base flex-shrink-0 whitespace-nowrap">
-              📍 Location ▼
-            </Button>
-            <Button variant="ghost" className="text-foreground text-sm md:text-base flex-shrink-0 whitespace-nowrap">
-              💰 Salary ▼
-            </Button>
-            <Button variant="ghost" className="text-foreground text-sm md:text-base flex-shrink-0 whitespace-nowrap">
-              🎁 Benefits ▼
-            </Button>
+            <FilterDropdown
+              title="📍 Location"
+              options={filterOptions.locations.map(loc => ({ 
+                value: loc, 
+                label: loc,
+                count: allJobs.filter(job => job.location === loc).length
+              }))}
+              selectedValues={filters.location ? [filters.location] : []}
+              onSelectionChange={(values) => updateFilters({ location: values[0] || undefined })}
+              multiSelect={false}
+            />
+            <FilterDropdown
+              title="💰 Salary"
+              salaryOptions={filterOptions.salaryRanges}
+              selectedSalaryRange={filters.minSalary !== undefined && filters.maxSalary !== undefined ? 
+                { min: filters.minSalary, max: filters.maxSalary } : undefined}
+              onSalaryChange={(range) => updateFilters({ 
+                minSalary: range?.min, 
+                maxSalary: range?.max 
+              })}
+            />
+            <FilterDropdown
+              title="🎁 Benefits"
+              options={filterOptions.benefits.map(benefit => ({ 
+                value: benefit, 
+                label: benefit,
+                count: allJobs.filter(job => job.benefits?.includes(benefit)).length
+              }))}
+              selectedValues={filters.benefits || []}
+              onSelectionChange={(values) => updateFilters({ benefits: values })}
+              multiSelect={true}
+            />
             <div className="ml-auto flex-shrink-0">
               <Button variant="ghost" className="text-foreground text-sm md:text-base whitespace-nowrap">
                 📊 Sort by
@@ -179,10 +227,7 @@ export default function Home() {
               <p className="text-gray-500 mb-4">尝试调整您的搜索条件或过滤器</p>
               <Button 
                 variant="outline"
-                onClick={() => {
-                  setSearchResults(null);
-                  // 这里可以添加重置搜索的逻辑
-                }}
+                onClick={clearFilters}
               >
                 显示所有职位
               </Button>
